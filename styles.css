@@ -13,8 +13,8 @@ canvas {
     border: 2px solid #000;
     border-radius: 5px;
     margin: 20px;
-    width: 500px;
-    height: 500px;
+    width: min(500px, 80vw);
+    height: min(500px, 80vw);
 }
 
 button {
@@ -43,8 +43,10 @@ button:disabled {
     justify-content: center;
 }
 
+
+
 #controls {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -52,12 +54,17 @@ button:disabled {
     padding: 10px;
     background-color: #e8e8e8;
     display: flex;
-    justify-content: center;
     gap: 50px;
     border-bottom: 2px solid #888;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .controls-flex {
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -69,15 +76,17 @@ button:disabled {
     justify-content: center;
 }
 
-label, input {
+label,
+input {
     width: 200px;
     box-sizing: border-box;
     text-align: center;
     border-radius: 5px;
-    height: 35%;
+    height: max(35%, 35px);
     transition: all 0.3s ease-in-out;
     background-color: none;
 }
+
 
 #r-factor:focus {
     background-color: #ff20207a;
@@ -92,9 +101,13 @@ label, input {
 }
 
 label {
-    margin-top: 6px;
+    margin-top: 10px;
+}
+
+input {
+    margin-bottom: 10px;
 }
 
 #download {
-    width: 200px
+    width: min(200px, 60vw);
 }
