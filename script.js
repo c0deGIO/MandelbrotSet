@@ -31,6 +31,17 @@ function mandRec(z, c, iteration) {
     }
 }
 
+function mandFor(c) {  //Using for loops instead of recursion
+    var ret = [0, 0];
+    for (let i = 0; i <= maxIteration; i++) {
+        ret = [ret[0] ** 2 - ret[1] ** 2 + c[0], 2 * ret[0] * ret[1] + c[1]];
+        if (!Number.isFinite(ret[0]) || !Number.isFinite(ret[1])) {
+            return i;
+        }
+    }
+    return maxIteration;
+}
+
 
 let RunningIntervalID = null;
 let CurrentResolution = null;
@@ -44,14 +55,14 @@ function generateMandelbrotSet() {
     const factorR = parseFloat(document.getElementById("r-factor").value);
     const factorG = parseFloat(document.getElementById("g-factor").value);
     const factorB = parseFloat(document.getElementById("b-factor").value);
-    
+
     let counter = 0;
-    
+
     let x, y;
     var outSize = [6, 6];
     var outPos = [0.75, 0];
     var res = [resolution, resolution];
-    var maxTimes = res[0]*res[1];
+    var maxTimes = res[0] * res[1];
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
     //var butchSize = Math.round(20000/maxIteration);
@@ -72,26 +83,27 @@ function generateMandelbrotSet() {
 
     const intervalId = setInterval(() => {
         let tempcol;
-        for (let i=0; i<butchSize; i++) {
-        
-        ix = Math.floor(counter/res[1]);
-        iy = counter%res[1];
-        tempcol = drawPixel(ix, iy);
-        if (!(res[1]%2==1 && iy==Math.round(res[1]/2))) {
-            setPixel(ix, res[1]-iy-1, tempcol);
+        for (let i = 0; i < butchSize; i++) {
+
+            ix = Math.floor(counter / res[1]);
+            iy = counter % res[1];
+            tempcol = drawPixel(ix, iy);
+            if (!(res[1] % 2 == 1 && iy == Math.round(res[1] / 2))) {
+                setPixel(ix, res[1] - iy - 1, tempcol);
+            }
+            if (iy == Math.round(res[1] / 2) - 1) {
+                counter += Math.round((res[1] - 1) / 2);
+            } else {
+                counter += 1;
+            }
+            if (counter >= maxTimes) {
+                clearInterval(intervalId);
+                deleteProgress();
+                document.getElementById("generate").textContent = "Generate";
+                return;
+            }
         }
-        if (iy == Math.round(res[1]/2)-1) {
-            counter += Math.round((res[1]-1)/2);
-        } else {
-        counter += 1;
-        }
-        if (counter >= maxTimes) {
-            clearInterval(intervalId);
-            deleteProgress();
-            document.getElementById("generate").textContent = "Generate";
-            return;
-        }} 
-        updateProgress(ix, iy); 
+        updateProgress(ix, iy);
     }, 0);
     RunningIntervalID = intervalId;
 
@@ -109,7 +121,7 @@ function generateMandelbrotSet() {
     function drawPixel(ix, iy) {
         x = ((ix + 0.5 - res[0] / 2) * outSize[0]) / (res[0] * 2) - outPos[0];
         y = ((iy + 0.5 - res[1] / 2) * outSize[1]) / (res[1] * 2) - outPos[1];
-        var s = mandRec([0, 0], [x, y], 0);
+        s = mandFor([x, y]);
         var col = calculateColour(s);
         setPixel(ix, iy, col);
         return col;
@@ -129,11 +141,11 @@ function generateMandelbrotSet() {
     }
 
     function updateProgress(ix, iy) {
-        var x = ix/res[0];
-        var y = 2*iy/res[1];
-        var prog = x+y/res[0];
-        var btn = document.getElementById("download");      
-        btn.textContent = `${Math.round(1000000*prog)/10000}%`;
+        var x = ix / res[0];
+        var y = 2 * iy / res[1];
+        var prog = x + y / res[0];
+        var btn = document.getElementById("download");
+        btn.textContent = `${Math.round(1000000 * prog) / 10000}%`;
         btn.disabled = true;
     }
 }
